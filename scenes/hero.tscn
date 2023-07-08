@@ -16,8 +16,8 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -16)
 sprite_frames = ExtResource("1_n74qf")
-animation = &"walk"
-frame_progress = 0.780229
+animation = &"idle"
+frame_progress = 0.703411
 
 [node name="Area2D" type="Area2D" parent="."]
 rotation = 1.5708
@@ -33,5 +33,8 @@ avoidance_enabled = true
 radius = 4.0
 debug_enabled = true
 
+[node name="AttackTimer" type="Timer" parent="."]
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

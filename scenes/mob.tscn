@@ -196,7 +196,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_no5pp")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
 "speed": 9.0
 }, {
@@ -319,8 +319,7 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_blvos")
-animation = &"idle"
-frame_progress = 0.528455
+animation = &"death"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 path_desired_distance = 2.0
@@ -336,4 +335,7 @@ debug_enabled = true
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_0qgsq")
 
+[node name="AttackTimer" type="Timer" parent="."]
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
