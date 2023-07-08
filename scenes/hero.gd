@@ -66,6 +66,12 @@ func set_walk_animation() -> void:
 		$AnimatedSprite2D.stop()
 
 
+func attack() -> void:
+	$AnimatedSprite2D.play("attack")
+	attacking_mob.take_damage(attack_strength)
+	$AttackTimer.start(attack_time)
+
+
 func take_damage(damage: int) -> void:
 	health -= damage
 	print("hero health %s" % health)
@@ -112,16 +118,15 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		$AnimatedSprite2D.set_flip_h(global_position.x > mob.global_position.x)
 		is_fighting = true
 		attacking_mob = mob
-		attacking_mob.fight(self)
+		attacking_mob.fight()
+		attack()
 		$AttackTimer.start(attack_time)
 		attacking_mob.died.connect(_on_mob_died)
 
 
 func _on_attack_timer_timeout() -> void:
 	if health > 0 && attacking_mob.health > 0:
-		$AnimatedSprite2D.play("attack")
-		attacking_mob.take_damage(attack_strength)
-		$AttackTimer.start(attack_time)
+		attack()
 
 
 func _on_mob_died() -> void:

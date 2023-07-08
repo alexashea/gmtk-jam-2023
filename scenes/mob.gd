@@ -29,11 +29,15 @@ func _process(_delta: float) -> void:
 		$AnimatedSprite2D.play("idle")
 
 
-func start(start_position: Vector2, goal_position: Vector2) -> void:
+func start(start_position: Vector2) -> void:
 	position = start_position
 	home_location = start_position
 	await get_tree().physics_frame
-	set_movement_target(goal_position)
+
+
+func set_hero(hero: Hero) -> void:
+	self.hero = hero
+	set_movement_target(hero.global_position)
 
 
 func set_movement_target(movement_target: Vector2) -> void:
@@ -48,10 +52,17 @@ func set_walk_animation() -> void:
 		$AnimatedSprite2D.play("idle")
 
 
-func fight(hero: Hero) -> void:
+func fight() -> void:
 	$AnimatedSprite2D.play("idle")
 	is_fighting = true
 	self.hero = hero
+	attack()
+	$AttackTimer.start(attack_time)
+
+
+func attack() -> void:
+	$AnimatedSprite2D.play("attack")
+	hero.take_damage(attack_strength)
 	$AttackTimer.start(attack_time)
 
 
@@ -65,7 +76,7 @@ func take_damage(damage: int) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if is_fighting or health <= 0:
+	if is_fighting or health <= 0 or not hero or hero.health <= 0:
 		return
 
 	if navigation_agent.is_navigation_finished():
@@ -83,8 +94,6 @@ func _physics_process(_delta: float) -> void:
 	move_and_slide()
 
 
-func _on_attack_timer_timeout():
+func _on_attack_timer_timeout() -> void:
 	if health > 0 && hero.health > 0:
-		$AnimatedSprite2D.play("attack")
-		hero.take_damage(attack_strength)
-		$AttackTimer.start(attack_time)
+		attack()

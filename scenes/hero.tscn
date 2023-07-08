@@ -17,7 +17,7 @@ metadata/_edit_group_ = true
 position = Vector2(0, -16)
 sprite_frames = ExtResource("1_n74qf")
 animation = &"idle"
-frame_progress = 0.703411
+frame_progress = 0.907999
 
 [node name="Area2D" type="Area2D" parent="."]
 rotation = 1.5708

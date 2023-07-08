@@ -35,7 +35,8 @@ func _ready() -> void:
 	$Hero.start(hero_start_position, treasure_position)
 
 	var mob_start_position := (Vector2(18.5, 8.5)) * 16
-	$Mob.start(mob_start_position, hero_start_position)
+	$Mob.start(mob_start_position)
+	$Mob.set_hero($Hero)
 	$MobTimer.start()
 
 
