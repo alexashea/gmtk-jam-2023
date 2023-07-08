@@ -37,6 +37,7 @@ func start(start_position: Vector2) -> void:
 func set_hero(new_hero: Hero) -> void:
 	hero = new_hero
 	set_movement_target(hero.global_position)
+	$NavigationTimer.start()
 	hero.hit_mob.connect(_on_hero_hit_mob)
 
 
@@ -108,3 +109,7 @@ func _on_hero_hit_mob() -> void:
 func _on_attack_timer_timeout() -> void:
 	if health > 0 && hero.health > 0:
 		attack()
+
+
+func _on_navigation_timer_timeout() -> void:
+	set_movement_target(hero.global_position)

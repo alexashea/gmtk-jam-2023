@@ -26,8 +26,4 @@ navigation_polygon = SubResource("NavigationPolygon_mvavi")
 
 [node name="Hero" parent="." instance=ExtResource("4_361d8")]
 
-[node name="MobTimer" type="Timer" parent="."]
-wait_time = 2.0
-
 [connection signal="found_treasure" from="Hero" to="." method="_on_hero_found_treasure"]
-[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

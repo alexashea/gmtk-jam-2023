@@ -64,7 +64,6 @@ func add_mob() -> void:
 	add_child(mob)
 	mob.start(mob_start_positions[index])
 	mob.set_hero($Hero)
-	$MobTimer.start()
 	mob_list[index] = mob
 
 
@@ -77,8 +76,3 @@ func reset_mobs() -> void:
 func _on_hero_found_treasure():
 	set_treasure_tile(false)
 	# TODO: play theft sfx
-
-
-func _on_mob_timer_timeout():
-	$Mob.set_movement_target($Hero.global_position)
-	$MobTimer.start()

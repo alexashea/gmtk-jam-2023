@@ -322,11 +322,6 @@ sprite_frames = SubResource("SpriteFrames_blvos")
 animation = &"death"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-path_desired_distance = 2.0
-target_desired_distance = 2.0
-path_max_distance = 10.0
-avoidance_enabled = true
-radius = 4.0
 debug_enabled = true
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -337,5 +332,8 @@ shape = SubResource("CapsuleShape2D_0qgsq")
 
 [node name="AttackTimer" type="Timer" parent="."]
 
+[node name="NavigationTimer" type="Timer" parent="."]
+
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="NavigationTimer" to="." method="_on_navigation_timer_timeout"]
