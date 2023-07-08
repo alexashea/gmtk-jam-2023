@@ -63,13 +63,17 @@ func set_walk_animation() -> void:
 		$AnimatedSprite2D.play("walk")
 		$AnimatedSprite2D.set_flip_h(velocity.x < 0)
 	else:
-		$AnimatedSprite2D.stop()
+		$AnimatedSprite2D.play("idle")
 
 
 func attack() -> void:
 	$AnimatedSprite2D.play("attack")
 	attacking_mob.take_damage(attack_strength)
 	$AttackTimer.start(attack_time)
+
+	# in case of race condition shenanigans
+	if health <= 0:
+		$AnimatedSprite2D.play("death")
 
 
 func take_damage(damage: int) -> void:

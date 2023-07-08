@@ -2,7 +2,6 @@ class_name Mob
 extends CharacterBody2D
 
 
-signal found_treasure
 signal died
 
 var home_location: Vector2
@@ -35,9 +34,10 @@ func start(start_position: Vector2) -> void:
 	await get_tree().physics_frame
 
 
-func set_hero(hero: Hero) -> void:
-	self.hero = hero
+func set_hero(new_hero: Hero) -> void:
+	hero = new_hero
 	set_movement_target(hero.global_position)
+	hero.hit_mob.connect(_on_hero_hit_mob)
 
 
 func set_movement_target(movement_target: Vector2) -> void:
@@ -55,7 +55,6 @@ func set_walk_animation() -> void:
 func fight() -> void:
 	$AnimatedSprite2D.play("idle")
 	is_fighting = true
-	self.hero = hero
 	attack()
 	$AttackTimer.start(attack_time)
 
@@ -64,6 +63,10 @@ func attack() -> void:
 	$AnimatedSprite2D.play("attack")
 	hero.take_damage(attack_strength)
 	$AttackTimer.start(attack_time)
+
+	# in case of race condition shenanigans
+	if health <= 0:
+		$AnimatedSprite2D.play("death")
 
 
 func take_damage(damage: int) -> void:
@@ -76,7 +79,10 @@ func take_damage(damage: int) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if is_fighting or health <= 0 or not hero or hero.health <= 0:
+	if (health <= 0 
+			or not hero 
+			or hero.health <= 0
+			or hero.is_fighting):
 		return
 
 	if navigation_agent.is_navigation_finished():
@@ -92,6 +98,11 @@ func _physics_process(_delta: float) -> void:
 	velocity = new_velocity
 	set_walk_animation()
 	move_and_slide()
+
+
+func _on_hero_hit_mob() -> void:
+	if health > 0:
+		$AnimatedSprite2D.play("idle")
 
 
 func _on_attack_timer_timeout() -> void:
