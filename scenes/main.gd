@@ -2,9 +2,9 @@ extends Node2D
 
 
 var window_size: Vector2
-var treasure_position := (Vector2(18.5, 4)) * 16
 var open_treasure_atlas_id := Vector2i(3, 19)
 var closed_treasure_atlas_id := Vector2i(2, 19)
+var hero_scene: PackedScene = preload("res://scenes/hero.tscn")
 var mob_scene: PackedScene = preload("res://scenes/mob.tscn")
 var mob_list: Array[Mob]
 
@@ -25,17 +25,17 @@ func _ready() -> void:
 
 	var hero_start_position: Vector2 = $Dungeon.position
 	hero_start_position.y += dungeon_size.y / 2 + 16
-	$Hero.start(hero_start_position, treasure_position)
+	add_hero(hero_start_position)
 
 	mob_list.resize(6)
 	mob_list.fill(null)
 
 	add_mob()
-	add_mob()
-	add_mob()
-	add_mob()
-	add_mob()
-	add_mob()
+#	add_mob()
+#	add_mob()
+#	add_mob()
+#	add_mob()
+#	add_mob()
 
 
 func set_treasure_tile(closed: bool) -> void:
@@ -44,6 +44,19 @@ func set_treasure_tile(closed: bool) -> void:
 
 	$Dungeon/Treasury.erase_cell(1, treasure_tile)
 	$Dungeon/Treasury.set_cell(1, treasure_tile, $Dungeon/Treasury.tile_set.get_source_id(0), atlas_id)
+
+
+func add_hero(start_position: Vector2) -> void:
+	var treasure_position := (Vector2(18.5, 4)) * 16
+
+	var hero: Hero = hero_scene.instantiate()
+	add_child(hero)
+
+	hero.start(start_position, treasure_position)
+
+	hero.found_treasure.connect(_on_hero_found_treasure)
+	hero.escaped.connect(_on_hero_escaped)
+	hero.died.connect(_on_hero_died)
 
 
 func add_mob() -> void:
@@ -75,4 +88,24 @@ func reset_mobs() -> void:
 
 func _on_hero_found_treasure():
 	set_treasure_tile(false)
+#	var stolen_gold: int = min(roundi(gold * 0.1), gold)
+#	gold -= stolen_gold
+#	hero.gold += stolen_gold
 	# TODO: play theft sfx
+
+
+func _on_hero_escaped():
+	print("hero escaped")
+#	show_escape_message()
+#	day += 1
+#	hero_level = calculate_hero_level(true)
+#	start_manage_phase()
+
+
+func _on_hero_died():
+	print("hero died")
+#	gold += hero.gold
+#	show_success_message()
+#	day += 1
+#	hero_level = calculate_hero_level(false)
+#	start_manage_phase()
