@@ -2,62 +2,73 @@ class_name Hero
 extends CharacterBody2D
 
 
-var speed: int = 200
+signal found_treasure
+
+var speed: int = 20
+var has_treasure: bool = false
+var exit_position: Vector2
+var treasure_position: Vector2
 
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 
 
 func _ready() -> void:
-	navigation_agent.path_desired_distance = 4.0
-	navigation_agent.target_desired_distance = 4.0
+	navigation_agent.path_desired_distance = 1.5
+	navigation_agent.target_desired_distance = 1.5
 
 
 func start(start_position: Vector2, goal_position: Vector2) -> void:
+	exit_position = start_position
+	treasure_position = goal_position
 	position = start_position
 	await get_tree().physics_frame
 	set_movement_target(goal_position)
-
-
-func _process(delta: float) -> void:
-	var velocity := Vector2.ZERO
-	if Input.is_action_pressed("ui_up"):
-		velocity += Vector2.UP
-	if Input.is_action_pressed("ui_down"):
-		velocity += Vector2.DOWN
-	if Input.is_action_pressed("ui_left"):
-		velocity += Vector2.LEFT
-	if Input.is_action_pressed("ui_right"):
-		velocity += Vector2.RIGHT
-
-	if not velocity == Vector2.ZERO:
-		velocity = velocity.normalized()
-		$AnimatedSprite2D.play("walk")
-		$AnimatedSprite2D.set_flip_h(velocity.x < 0)
-		position += velocity * speed * delta
-	else:
-		$AnimatedSprite2D.stop()
 
 
 func set_movement_target(movement_target: Vector2):
 	navigation_agent.target_position = movement_target
 
 
+func get_manual_movement() -> Vector2:	
+	var manual_velocity := Vector2.ZERO
+	if Input.is_action_pressed("ui_up"):
+		manual_velocity += Vector2.UP
+	if Input.is_action_pressed("ui_down"):
+		manual_velocity += Vector2.DOWN
+	if Input.is_action_pressed("ui_left"):
+		manual_velocity += Vector2.LEFT
+	if Input.is_action_pressed("ui_right"):
+		manual_velocity += Vector2.RIGHT
+	return manual_velocity
+
+
+func set_walk_animation() -> void:
+	if not velocity == Vector2.ZERO:
+		$AnimatedSprite2D.play("walk")
+		$AnimatedSprite2D.set_flip_h(velocity.x < 0)
+	else:
+		$AnimatedSprite2D.stop()
+
+
 func _physics_process(delta: float) -> void:
-	print(navigation_agent.distance_to_target())
 	if navigation_agent.is_navigation_finished():
-		print("navigation finished")
+		if not has_treasure:
+			has_treasure = true
+			set_movement_target(exit_position)
+			found_treasure.emit()
+
+		velocity = get_manual_movement().normalized() * speed
+		set_walk_animation()
+		move_and_slide()
 		return
 
-	print("navigating")
 	var current_agent_position: Vector2 = global_position
-	print("current: %s, %s" % [current_agent_position.x, current_agent_position.y])
 	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
-	print("next: %s, %s" % [next_path_position.x, next_path_position.y])
 
 	var new_velocity: Vector2 = next_path_position - current_agent_position
-	print("velocity: %s, %s" % [new_velocity.x, new_velocity.y])
-	new_velocity = new_velocity.normalized()
-	new_velocity = new_velocity * speed
+	new_velocity += get_manual_movement()
+	new_velocity = new_velocity.normalized() * speed
 
 	velocity = new_velocity
+	set_walk_animation()
 	move_and_slide()
