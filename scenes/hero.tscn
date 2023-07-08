@@ -16,10 +16,13 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -16)
 sprite_frames = ExtResource("1_n74qf")
-animation = &"attack"
+animation = &"walk"
+frame_progress = 0.780229
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Area2D" type="Area2D" parent="."]
 rotation = 1.5708
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CapsuleShape2D_0qgsq")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -30,4 +33,5 @@ avoidance_enabled = true
 radius = 4.0
 debug_enabled = true
 
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
