@@ -4,16 +4,20 @@
 [ext_resource type="Script" path="res://scenes/hero.gd" id="1_v0n0c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pvc5q"]
-radius = 8.0
+radius = 4.0
 
-[node name="Hero" type="Area2D"]
+[node name="Hero" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 7
 script = ExtResource("1_v0n0c")
+metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = ExtResource("1_n74qf")
-animation = &"walk"
-frame_progress = 0.822027
+animation = &"attack"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 16)
 shape = SubResource("CircleShape2D_pvc5q")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]

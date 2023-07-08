@@ -27,4 +27,4 @@ func _ready() -> void:
 	$Hero.apply_scale(Vector2(dungeon_scale, dungeon_scale))
 	var hero_start_position: Vector2 = $Dungeon.position
 	hero_start_position.y += dungeon_size.y / 2
-	$Hero.start(hero_start_position)
+	$Hero.start(hero_start_position, hero_start_position + Vector2(100, 0))
