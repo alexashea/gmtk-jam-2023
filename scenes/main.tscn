@@ -137,3 +137,7 @@ metadata/_edit_use_anchors_ = true
 [node name="Sprite2D" type="Sprite2D" parent="HUD"]
 position = Vector2(16, 16)
 texture = ExtResource("4_huudb")
+
+[connection signal="pressed" from="HUD/ManageButton" to="." method="_on_manage_button_pressed"]
+[connection signal="pressed" from="HUD/FightButton" to="." method="_on_fight_button_pressed"]
+[connection signal="pressed" from="HUD/AddSkeletonButton" to="." method="_on_add_skeleton_button_pressed"]

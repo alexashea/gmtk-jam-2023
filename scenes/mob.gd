@@ -7,6 +7,8 @@ signal died
 var home_location: Vector2
 var move_speed: int = 20
 
+var is_build_mode = true
+
 var is_fighting: bool = false
 var attack_speed: int = 5
 var attack_time: float = max(11 - attack_speed, 1) / 4
@@ -32,6 +34,10 @@ func start(start_position: Vector2) -> void:
 	position = start_position
 	home_location = start_position
 	await get_tree().physics_frame
+
+
+func toggle_game_mode() -> void:
+	is_build_mode = not is_build_mode
 
 
 func set_hero(new_hero: Hero) -> void:
@@ -63,7 +69,6 @@ func fight() -> void:
 func attack() -> void:
 	$AnimatedSprite2D.play("attack")
 	hero.take_damage(attack_strength)
-	$AttackTimer.start(attack_time)
 
 	# in case of race condition shenanigans
 	if health <= 0:
@@ -80,7 +85,8 @@ func take_damage(damage: int) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if (health <= 0 
+	if (is_build_mode
+			or health <= 0 
 			or not hero 
 			or hero.health <= 0
 			or hero.is_fighting):
@@ -107,9 +113,14 @@ func _on_hero_hit_mob() -> void:
 
 
 func _on_attack_timer_timeout() -> void:
-	if health > 0 && hero.health > 0:
+	if health > 0 && hero && hero.health > 0:
 		attack()
+	else:
+		$AttackTimer.stop()
 
 
 func _on_navigation_timer_timeout() -> void:
-	set_movement_target(hero.global_position)
+	if hero:
+		set_movement_target(hero.global_position)
+	else:
+		$NavigationTimer.stop()
