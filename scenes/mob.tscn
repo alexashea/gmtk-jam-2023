@@ -1,7 +1,9 @@
-[gd_scene load_steps=45 format=3 uid="uid://68ygth0qiere"]
+[gd_scene load_steps=47 format=3 uid="uid://68ygth0qiere"]
 
 [ext_resource type="Script" path="res://scenes/mob.gd" id="1_o234x"]
 [ext_resource type="Texture2D" uid="uid://cr4jelh0y6c6d" path="res://art/skeleton spritesheet calciumtrice.png" id="2_wji1u"]
+[ext_resource type="AudioStream" uid="uid://d4k611411b0jj" path="res://sounds/Socapex - big punch.wav" id="3_157ed"]
+[ext_resource type="AudioStream" uid="uid://17emqmog3h7q" path="res://sounds/bones-2.wav" id="4_dx2td"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8mdpw"]
 atlas = ExtResource("2_wji1u")
@@ -333,6 +335,12 @@ shape = SubResource("CapsuleShape2D_0qgsq")
 [node name="AttackTimer" type="Timer" parent="."]
 
 [node name="NavigationTimer" type="Timer" parent="."]
+
+[node name="AttackSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_157ed")
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_dx2td")
 
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]

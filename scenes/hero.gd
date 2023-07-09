@@ -54,7 +54,6 @@ func set_movement_target(movement_target: Vector2) -> void:
 	navigation_agent.target_position = movement_target
 
 
-
 func set_walk_animation() -> void:
 	if not velocity == Vector2.ZERO:
 		$AnimatedSprite2D.play("walk")
@@ -66,6 +65,7 @@ func set_walk_animation() -> void:
 func attack() -> void:
 	$AnimatedSprite2D.play("attack")
 	attacking_mob.take_damage(attack_strength)
+	$AttackSound.play()
 	$AttackTimer.start(attack_time)
 
 	# in case of race condition shenanigans
@@ -79,11 +79,13 @@ func take_damage(damage: int) -> void:
 	if health <= 0:
 		print("hero died")
 		$AnimatedSprite2D.play("death")
+		$DeathSound.play()
 		died.emit()
 
 
 func _physics_process(_delta: float) -> void:
 	if is_fighting or health <= 0 or has_escaped:
+		# in case of more race condition shenanigans
 		if is_fighting and attacking_mob.health <= 0:
 			_on_mob_died()
 		return

@@ -29,6 +29,8 @@ var needs_pity_mob: bool = false
 func _ready() -> void:
 	window_size = get_viewport().size
 
+	$BuildMusic.play()
+
 	var dungeon_rooms: Array[Node] = $Dungeon.get_children()
 	var dungeon_size := Vector2.ZERO
 	for i in dungeon_rooms.size():
@@ -151,26 +153,24 @@ func _on_hero_found_treasure():
 	set_treasure_tile(false)
 	var stolen_gold: int = min(roundi(gold * 0.2), gold)
 	gold -= stolen_gold
+	$CoinSound.play()
 	$HUD/CoinsLabel.text = "%sg" % gold
 	hero.gold += stolen_gold
-	# TODO: play theft sfx
 
 
 func _on_hero_escaped() -> void:
 	print("hero escaped")
-	# TODO: play failure sfx
 	hero.hide()
 
 	hero_level = calculate_hero_level(true)
 	needs_pity_mob = true
 
 	$HUD/ManageButton.disabled = false
-#	show_escape_message()
+	$FightMusic.stop()
 
 
 func _on_hero_died() -> void:
 	print("hero died")
-	# TODO: play success sfx
 	gold += hero.gold
 	$HUD/CoinsLabel.text = "%sg" % gold
 
@@ -178,7 +178,7 @@ func _on_hero_died() -> void:
 	needs_pity_mob = false
 
 	$HUD/ManageButton.disabled = false
-#	show_success_message()
+	$FightMusic.stop()
 
 
 func _on_manage_button_pressed() -> void:
@@ -187,6 +187,9 @@ func _on_manage_button_pressed() -> void:
 
 	$HUD/ManageButton.hide()
 	$HUD/FightButton.show()
+
+	$FightMusic.stop()
+	$BuildMusic.play()
 
 	remove_hero()
 	reset_mobs()
@@ -202,6 +205,9 @@ func _on_fight_button_pressed() -> void:
 	$HUD/AddSkeletonButton.hide()
 	$HUD/ManageButton.disabled = true
 	$HUD/ManageButton.show()
+
+	$BuildMusic.stop()
+	$FightMusic.play()
 	
 	add_hero()
 
@@ -212,3 +218,5 @@ func _on_add_skeleton_button_pressed() -> void:
 		needs_pity_mob = false
 		$HUD/CoinsLabel.text = "%sg" % gold
 		update_skeleton_button()
+		$CoinSound.play()
+		$SkeletonSound.play()

@@ -69,6 +69,7 @@ func fight() -> void:
 func attack() -> void:
 	$AnimatedSprite2D.play("attack")
 	hero.take_damage(attack_strength)
+	$AttackSound.play()
 
 	# in case of race condition shenanigans
 	if health <= 0:
@@ -81,6 +82,7 @@ func take_damage(damage: int) -> void:
 	if health <= 0:
 		print("mob died")
 		$AnimatedSprite2D.play("death")
+		$DeathSound.play()
 		died.emit()
 
 
