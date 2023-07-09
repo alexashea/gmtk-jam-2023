@@ -43,9 +43,9 @@ func start(start_position: Vector2, goal_position: Vector2, level: int) -> void:
 	set_movement_target(goal_position)
 
 	gold = 10 + 5 * level
-	attack_speed = level
+	attack_speed = level / 10
 	attack_time = max(11 - attack_speed, 1) / 4
-	max_health = 10 * level + randi_range(0, 10)
+	max_health = level + randi_range(0, 10)
 	health = max_health
 	attack_strength = level
 
@@ -53,18 +53,6 @@ func start(start_position: Vector2, goal_position: Vector2, level: int) -> void:
 func set_movement_target(movement_target: Vector2) -> void:
 	navigation_agent.target_position = movement_target
 
-
-func get_manual_movement() -> Vector2:
-	var manual_velocity := Vector2.ZERO
-	if Input.is_action_pressed("ui_up"):
-		manual_velocity += Vector2.UP
-	if Input.is_action_pressed("ui_down"):
-		manual_velocity += Vector2.DOWN
-	if Input.is_action_pressed("ui_left"):
-		manual_velocity += Vector2.LEFT
-	if Input.is_action_pressed("ui_right"):
-		manual_velocity += Vector2.RIGHT
-	return manual_velocity
 
 
 func set_walk_animation() -> void:
@@ -96,6 +84,8 @@ func take_damage(damage: int) -> void:
 
 func _physics_process(_delta: float) -> void:
 	if is_fighting or health <= 0 or has_escaped:
+		if is_fighting and attacking_mob.health <= 0:
+			_on_mob_died()
 		return
 
 	if navigation_agent.is_navigation_finished():
@@ -107,7 +97,6 @@ func _physics_process(_delta: float) -> void:
 			has_escaped = true
 			escaped.emit()
 
-		velocity = get_manual_movement().normalized() * move_speed
 		set_walk_animation()
 		move_and_slide()
 		return
@@ -116,7 +105,6 @@ func _physics_process(_delta: float) -> void:
 	var next_path_position: Vector2 = navigation_agent.get_next_path_position()
 
 	var new_velocity: Vector2 = next_path_position - current_agent_position
-	new_velocity += get_manual_movement()
 	new_velocity = new_velocity.normalized() * move_speed
 
 	velocity = new_velocity
@@ -141,6 +129,8 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 func _on_attack_timer_timeout() -> void:
 	if health > 0 && attacking_mob.health > 0:
 		attack()
+	else:
+		$AttackTimer.stop()
 
 
 func _on_mob_died() -> void:

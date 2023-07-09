@@ -23,6 +23,7 @@ var mob_start_positions: Array[Vector2] = [
 	(Vector2(4.5, 6.5)) * 16,
 ]
 var skeleton_cost: int = 60
+var needs_pity_mob: bool = false
 
 
 func _ready() -> void:
@@ -124,7 +125,8 @@ func toggle_game_mode_for_mobs() -> void:
 
 func calculate_hero_level(hero_succeeded: bool) -> int:
 	var new_level: float = hero_level + day
-	new_level *= 1.1 if hero_succeeded else 0.9
+	if hero_succeeded:
+		new_level *= 0.5
 	new_level = roundi(new_level)
 	return max(new_level, 1)
 
@@ -133,10 +135,11 @@ func update_skeleton_button() -> void:
 	var add_skeletons_button: Button = $HUD/AddSkeletonButton
 	var has_max_skeletons = mob_list.find(null) == -1
 
-	add_skeletons_button.disabled = has_max_skeletons or gold < skeleton_cost
+	add_skeletons_button.disabled = (has_max_skeletons
+			or (gold < skeleton_cost and not needs_pity_mob))
 	if has_max_skeletons:
 		add_skeletons_button.text = "MAX SKELETONS"
-	elif gold < skeleton_cost:
+	elif gold < skeleton_cost and not needs_pity_mob:
 		add_skeletons_button.text = "NOT ENOUGH GOLD"
 	else:
 		add_skeletons_button.text = "BUY SKELETONS"
@@ -159,6 +162,7 @@ func _on_hero_escaped() -> void:
 	hero.hide()
 
 	hero_level = calculate_hero_level(true)
+	needs_pity_mob = true
 
 	$HUD/ManageButton.disabled = false
 #	show_escape_message()
@@ -171,6 +175,7 @@ func _on_hero_died() -> void:
 	$HUD/CoinsLabel.text = "%sg" % gold
 
 	hero_level = calculate_hero_level(false)
+	needs_pity_mob = false
 
 	$HUD/ManageButton.disabled = false
 #	show_success_message()
@@ -203,6 +208,7 @@ func _on_fight_button_pressed() -> void:
 
 func _on_add_skeleton_button_pressed() -> void:
 	if add_mob():
-		gold -= skeleton_cost
+		gold -= min(skeleton_cost, gold)
+		needs_pity_mob = false
 		$HUD/CoinsLabel.text = "%sg" % gold
 		update_skeleton_button()
