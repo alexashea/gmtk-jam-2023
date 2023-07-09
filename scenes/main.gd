@@ -47,7 +47,7 @@ func set_treasure_tile(closed: bool) -> void:
 
 
 func add_hero(start_position: Vector2) -> void:
-	var treasure_position := (Vector2(18.5, 4)) * 16
+	var treasure_position := (Vector2(18.5, 6)) * 16
 
 	var hero: Hero = hero_scene.instantiate()
 	add_child(hero)
@@ -61,12 +61,12 @@ func add_hero(start_position: Vector2) -> void:
 
 func add_mob() -> void:
 	var mob_start_positions: Array[Vector2] = [
-		(Vector2(18.5, 8.5)) * 16,
-		(Vector2(8, 6.5)) * 16,
-		(Vector2(11.5, 4.5)) * 16,
-		(Vector2(11.5, 8.5)) * 16,
-		(Vector2(4.5, 8.5)) * 16,
-		(Vector2(4.5, 4.5)) * 16,
+		(Vector2(18.5, 10.5)) * 16,
+		(Vector2(8, 8.5)) * 16,
+		(Vector2(11.5, 6.5)) * 16,
+		(Vector2(11.5, 10.5)) * 16,
+		(Vector2(4.5, 10.5)) * 16,
+		(Vector2(4.5, 6.5)) * 16,
 	]
 
 	var index: int = mob_list.find(null)

@@ -1,18 +1,40 @@
-[gd_scene load_steps=5 format=3 uid="uid://coxwfpcvn014o"]
+[gd_scene load_steps=12 format=3 uid="uid://coxwfpcvn014o"]
 
 [ext_resource type="Script" path="res://scenes/main.gd" id="1_7r2wg"]
 [ext_resource type="PackedScene" uid="uid://b0isw578mbr37" path="res://scenes/entrance.tscn" id="1_olr7k"]
 [ext_resource type="PackedScene" uid="uid://63lasbcqvq48" path="res://scenes/treasury.tscn" id="2_vghn8"]
+[ext_resource type="Texture2D" uid="uid://44857etepbi3" path="res://art/money.png" id="4_huudb"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_mvavi"]
 vertices = PackedVector2Array(0, 108, 0, 100, 52, 100, 52, 108, 52, 52, 204, 52, 204, 132, 52, 156, 204, 140, 244, 132, 244, 116, 276, 116, 276, 52, 316, 52, 316, 156, 244, 156, 244, 140, 204, 156)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(2, 4, 5, 6), PackedInt32Array(3, 2, 6), PackedInt32Array(7, 3, 6, 8), PackedInt32Array(9, 10, 11), PackedInt32Array(11, 12, 13, 14), PackedInt32Array(11, 14, 15, 16), PackedInt32Array(9, 11, 16), PackedInt32Array(6, 9, 16, 8), PackedInt32Array(7, 8, 17)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(0, 100, 52, 100, 52, 52, 204, 52, 204, 132, 244, 132, 244, 116, 276, 116, 276, 52, 316, 52, 316, 156, 244, 156, 244, 140, 204, 140, 204, 156, 52, 156, 52, 108, 0, 108)])
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sf7fo"]
+bg_color = Color(1, 0.313726, 0.313726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w37lk"]
+bg_color = Color(1, 0.313726, 0.313726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nm8wo"]
+bg_color = Color(1, 0.313726, 0.313726, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5pfhi"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dcute"]
+bg_color = Color(1, 0.313726, 0.313726, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_tbqhf"]
+font_size = 32
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_7r2wg")
 
 [node name="Dungeon" type="Node2D" parent="."]
+position = Vector2(0, 32)
 metadata/_edit_group_ = true
 
 [node name="Entrance" parent="Dungeon" instance=ExtResource("1_olr7k")]
@@ -21,4 +43,97 @@ metadata/_edit_group_ = true
 position = Vector2(240, 112)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(0, 32)
 navigation_polygon = SubResource("NavigationPolygon_mvavi")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="HUD"]
+offset_right = 336.0
+offset_bottom = 32.0
+color = Color(0.501961, 0.25098, 0, 1)
+
+[node name="ManageButton" type="Button" parent="HUD"]
+offset_left = 224.0
+offset_top = 4.0
+offset_right = 280.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sf7fo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w37lk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_nm8wo")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5pfhi")
+theme_override_styles/focus = SubResource("StyleBoxFlat_dcute")
+text = "MANAGE"
+
+[node name="FightButton" type="Button" parent="HUD"]
+offset_left = 224.0
+offset_top = 4.0
+offset_right = 280.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sf7fo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w37lk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_nm8wo")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5pfhi")
+theme_override_styles/focus = SubResource("StyleBoxFlat_dcute")
+text = "FIGHT"
+
+[node name="MessageLabel" type="Label" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -608.0
+offset_top = -352.0
+offset_right = -400.0
+offset_bottom = -272.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+label_settings = SubResource("LabelSettings_tbqhf")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CoinsLabel" type="Label" parent="HUD"]
+offset_left = 28.0
+offset_top = 4.0
+offset_right = 68.0
+offset_bottom = 27.0
+theme_override_font_sizes/font_size = 12
+text = "100g"
+vertical_alignment = 1
+
+[node name="DayLabel" type="Label" parent="HUD"]
+offset_left = 288.0
+offset_top = 4.0
+offset_right = 328.0
+offset_bottom = 27.0
+theme_override_font_sizes/font_size = 12
+text = "Day 1
+"
+vertical_alignment = 1
+
+[node name="AddSkeletonButton" type="Button" parent="HUD"]
+anchors_preset = -1
+anchor_left = -0.00595238
+anchor_right = 0.00520833
+offset_left = 96.0
+offset_top = 4.0
+offset_right = 185.0
+offset_bottom = 28.0
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_sf7fo")
+theme_override_styles/hover = SubResource("StyleBoxFlat_w37lk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_nm8wo")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5pfhi")
+theme_override_styles/focus = SubResource("StyleBoxFlat_dcute")
+text = "ADD SKELETON"
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="HUD"]
+position = Vector2(16, 16)
+texture = ExtResource("4_huudb")
