@@ -22,6 +22,7 @@ window/size/viewport_width=1344
 window/size/viewport_height=832
 window/stretch/mode="canvas_items"
 window/stretch/scale=4.0
+window/icon="res://art/money.png"
 
 [editor]
 
